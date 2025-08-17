@@ -1,6 +1,6 @@
 from collections import UserDict
 
-class Field(UserDict):
+class Field:
     def __init__(self, value):
         self.value = value
     
@@ -25,7 +25,7 @@ class Phone(Field):
             return len(phone) == 10 and phone.isdigit()
             
 
-class Record(UserDict):
+class Record:
     def __init__(self, name):
         self.name = Name(name)
         self.phones = []
@@ -36,32 +36,31 @@ class Record(UserDict):
 
     def find_phone(self, phone):
         for number in self.phones:
-            if number == phone:
+            if number.value == phone:
                 return number
-            else:
-                print("The phone number is missing")
+        return None
     
     def remove_phone(self, phone):
-        for number in self.phones:
-            if number == phone:
-                self.phones.remove(number)
-            else:
-                print("The phone number is missing")
-    
+        phone_obj = self.find_phone(phone)
+        if phone_obj:
+            self.phones.remove(phone_obj)
+            return phone_obj
+        return None
+                
     def edit_phone(self, phone, new_phone):
-        for number in self.phones:
-            if number == phone:
-                new_phone_number = Phone(new_phone)
-                index = self.phones.index(phone)
-                self.phones[index] = new_phone_number
-            else:
-                print("Phone number is missing")
+        if self.find_phone(phone):
+            self.remove_phone(phone)
+            self.add_phone(new_phone)
+        else:
+            raise ValueError("Phone number is missing")
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '. join(p.value for p in self.phones)}"
     
 
 class AddressBook(UserDict):
+    def __init__(self):
+        super().__init__()
         
     def add_record(self, record):
         self.data[record.name.value] = record
@@ -75,7 +74,7 @@ class AddressBook(UserDict):
     
     def __str__(self):
         if not self.data:
-            return "Adress book is empty"
+            return "Address book is empty"
         
         result = []
         for record in self.data.values():
