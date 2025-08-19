@@ -48,20 +48,20 @@ class Record:
         return None
                 
     def edit_phone(self, phone, new_phone):
+        new_phone_number = Phone(new_phone)
         if self.find_phone(phone):
             self.remove_phone(phone)
             self.add_phone(new_phone)
         else:
             raise ValueError("Phone number is missing")
+        
 
     def __str__(self):
         return f"Contact name: {self.name.value}, phones: {'; '. join(p.value for p in self.phones)}"
     
 
 class AddressBook(UserDict):
-    def __init__(self):
-        super().__init__()
-        
+         
     def add_record(self, record):
         self.data[record.name.value] = record
      
